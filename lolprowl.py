@@ -10,8 +10,8 @@ class LoLProwl(object):
 
     def __init__(self, cron):
         # Settings
-        self.apikey = "xxxxxxxxxxxxxxxxxxx"
-        self.lolurl = "http://beta.leagueoflegends.com/launcher/content.php"
+        self.apikey = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        self.lolurl = "http://www.lol-europe.com/launcher/content.php?lg=en"
         self.statusfile = ".lolprowl.tmp"
         self.prowl_priority = 0
         
@@ -33,26 +33,20 @@ class LoLProwl(object):
         content = content.replace('\n', "")
         
         data = json.loads(content)
-        # print json.dumps(data , sort_keys=True, indent=4)
+        #print json.dumps(data , sort_keys=True, indent=4)
 
         # 0 = offline, 1 = online, 2 = busy
-        status = data["serverStatus"]
+        status = data["status"]
 
         lastStatus = self.lastStatus()
 
         if(status != lastStatus):
-            if(status == 0):
-                # print "Server is now OFFLINE!"
-                self.sendStatus("OFFLINE")
-            elif(status == 1):
+            if(status == True):
                 # print "Server is now ONLINE!"
                 self.sendStatus("ONLINE")
-            elif(status == 2):
-                # print "Server is now BUSY!"
-                self.sendStatus("BUSY")
             else:
                 # print "Server is now UNKNOWN!"
-                self.sendStatus("UNKNOWN")
+                self.sendStatus("OFFLINE")
         
         self.writeStatus(status)
         
@@ -67,9 +61,9 @@ class LoLProwl(object):
             f = open(self.statusfile, 'rb')
             s = f.read()
             f.close()
-            return int(s)
+            return bool(s)
         except:
-            return 0
+            return False
     
     def writeStatus(self, status):
         f = open(self.statusfile, 'wb')
