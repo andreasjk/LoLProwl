@@ -61,7 +61,7 @@ class LoLProwl(object):
             f = open(self.statusfile, 'rb')
             s = f.read()
             f.close()
-            return bool(s)
+            return (s == 'True')
         except:
             return False
     
